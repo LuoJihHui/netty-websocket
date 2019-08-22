@@ -1,8 +1,10 @@
 package com.study.socket.api;
 
+import com.study.socket.service.QingZhuService;
 import io.netty.handler.codec.http.HttpHeaders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.yeauty.annotation.*;
 import org.yeauty.pojo.Session;
@@ -10,7 +12,7 @@ import org.yeauty.pojo.Session;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
- * websocket的具体动作
+ * websocket
  *
  * @author luojihui
  * @date 2019/8/5
@@ -33,6 +35,10 @@ public class MyWebSocket {
      * 会话管理
      */
     private Session session;
+
+    @Autowired
+
+    private QingZhuService service;
 
     /**
      * 建立连接后
@@ -58,6 +64,7 @@ public class MyWebSocket {
         session.sendText("关闭连接");
         webSocketSet.remove(this);
         logger.info("有一连接关闭！当前连接人数为" + getOnlineCount());
+        session.sendText("QAQ");
     }
 
     /**
@@ -81,6 +88,7 @@ public class MyWebSocket {
     public void OnMessage(Session session, String message) {
         // 群发消息
         sendInfo(session, message);
+        sendMessage(session, service.test());
         logger.info("接收来自客户端" + session.id() + "的消息:" + message);
     }
 
